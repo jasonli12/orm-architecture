@@ -1,0 +1,74 @@
+For each of these skills, write pseudo-code (like the post = Post.all.first example above) to demonstrate how your application might perform these tasks through an ORM. For each code sample, also write a corresponding SQL statement. Send the code samples and SQL statements to your mentor.
+
+1. remove duplicates in a query response
+
+Ex. Select posts that have comments and remove duplicate posts
+
+commented_posts = Comments.select(:post_id).distinct
+
+SELECT DISTINCT post_id
+FROM comment;
+
+2. filter records using inequalities, pattern matching, ranges, and boolean logic
+
+Ex. Select all posts by Harry Potter
+
+harry_potter = User.where("full_name = 'Harry Potter'")
+harry_potter_posts = harry_potter.posts
+
+SELECT *
+FROM post
+WHERE user_id IN
+  (SELECT user.id
+  FROM user
+  WHERE user.full_name = 'Harry Potter');
+
+3. sort records in a particular order
+
+Ex. sort posts by title
+
+Post.order(:title)
+
+SELECT *
+FROM post
+ORDER BY post.title;
+
+4. limit the number of records returned
+
+Ex. select first 5 posts
+
+Post.limit(5)
+
+SELECT *
+FROM post
+LIMIT 5;
+
+
+5. group records into sections
+
+Ex. total comments by user
+
+Comment.all.group(:user_id).count
+
+SELECT user_id, COUNT(id)
+FROM comment
+GROUP BY user_id;
+
+6. perform calculations using aggregate functions
+
+Ex. find the total number of comments
+
+Comment.all.count
+
+SELECT COUNT(id)
+FROM comment;
+
+7. join tables using cross join, inner join, and outer join
+Ex. find the user for each comment
+
+Comment.joins(:user).select(:user.full_name, :comment.body)
+
+SELECT user.full_name, comment.body
+FROM comment
+JOIN user
+ON comment.user_id = user.id;
